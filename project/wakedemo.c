@@ -13,6 +13,34 @@ char score[32];
 short redrawScreen = 1;
 u_int fontFgColor = COLOR_GREEN;
 
+void collision_handler() {
+  collision = detectCollision();
+  switch (collision) {
+  case 1: // Collision with top of screen 
+    if (ball_vel_x > 0)
+      setBallVelocity(1, 1);
+    else 
+      setBallVelocity(-1, 1);
+    break;
+  case 2: // Collision with bottom of screen
+    if (ball_vel_x > 0)
+      setBallVelocity(1, -1);
+    else
+      setBallVelocity(-1, -1);
+    break;
+  case 3: // Collision with player 1
+    if (p1_vel > 0)
+      setBallVelocity(1, 1);
+    else
+      setBallVelocity(1, -1);
+    break;
+  case 4:
+    break;
+  default:
+    setBallVelocity(ball_vel_x, ball_vel_y);
+    break;
+  }
+}
 
 void wdt_c_handler()
 {
@@ -27,32 +55,7 @@ void wdt_c_handler()
   }
   if (dsecCount == 25) {
     dsecCount = 0;
-    collision = detectCollision();
-    switch (collision) {
-    case 1: // Collision with top of screen 
-      if (ball_vel_x > 0)
-	setBallVelocity(1, 1);
-      else 
-	setBallVelocity(-1, 1);
-      break;
-    case 2: // Collision with bottom of screen
-      if (ball_vel_x > 0)
-	setBallVelocity(1, -1);
-      else
-	setBallVelocity(-1, -1);
-      break;
-    case 3: // Collision with player 1
-      if (p1_vel > 0)
-	setBallVelocity(1, 1);
-      else
-	setBallVelocity(1, -1);
-      break;
-    case 4:
-      break;
-    default:
-      setBallVelocity(ball_vel_x, ball_vel_y);
-      break;
-    }
+    collision_handler();
     if (withinBounds()) {
       if (button_pressed(1)) {
 	if (canMove(1, -5)) {
