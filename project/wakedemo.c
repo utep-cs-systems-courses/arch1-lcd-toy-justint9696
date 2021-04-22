@@ -5,12 +5,13 @@
 #include "lcddraw.h"
 #include "buttons.h"
 #include "pong.h"
+#include "color.h"
 
 #define LED_GREEN BIT6             // P1.6
 
 char score[32];
 short redrawScreen = 1;
-u_int fontFgColor = COLOR_GREEN;
+u_int shapeFgColor = COLOR_ORANGE;
 
 void collision_handler() {
   char collision = detectCollision();
@@ -112,10 +113,10 @@ void main()
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
-      clearScreen(COLOR_BLUE);
-      fillRectangle(ball.pos_x, ball.pos_y, 5, 5, COLOR_ORANGE); // Ball
-      fillRectangle(p1.pos_x, p1.pos_y, 5, 50, COLOR_ORANGE);    // Player 1
-      fillRectangle(p2.pos_x, p2.pos_y, 5, 50, COLOR_ORANGE);    // Player 2
+      color_handler();
+      fillRectangle(ball.pos_x, ball.pos_y, 5, 5, shapeFgColor); // Ball
+      fillRectangle(p1.pos_x, p1.pos_y, 5, 50, shapeFgColor);    // Player 1
+      fillRectangle(p2.pos_x, p2.pos_y, 5, 50, shapeFgColor);    // Player 2
       drawString5x7((screenWidth / 2) - 35, (screenHeight / 2) - 65, score, COLOR_ORANGE, COLOR_BLUE);
     }
     P1OUT &= ~LED_GREEN;	/* green off */
