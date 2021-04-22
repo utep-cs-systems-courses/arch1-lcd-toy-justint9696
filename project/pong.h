@@ -1,15 +1,22 @@
 #ifndef _PONG_
 #define _PONG_
 
-#define SCREEN_WIDTH 160
-#define SCREEN_HEIGHT 120
+typedef struct Player {
+  char pos_x;
+  char pos_y;
+  char vel;
+  unsigned char score;
+} Player;
 
-extern char p1_pos_x, p1_pos_y;
-extern char p2_pos_x, p2_pos_y;
-extern char p1_vel, p2_vel;
-extern unsigned char p1_score, p2_score;
-extern char ball_pos_x, ball_pos_y;
-extern char ball_vel_x, ball_vel_y;
+typedef struct Ball {
+  char pos_x;
+  char pos_y;
+  char vel_x;
+  char vel_y;
+} Ball;
+
+extern Player p1, p2;
+extern Ball ball;
 
 char canMove(unsigned char player, char vel);
 

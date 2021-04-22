@@ -41,5 +41,5 @@ char button_pressed(unsigned char button) {
 }
 
 void button_interrupt_handler() {
-  
+  char p2val = button_handler();
 }
