@@ -34,8 +34,6 @@ void setBallVelocity(char vel_x, char vel_y);
 
 void setScore(unsigned char player, unsigned char score);
 
-void addScore(unsigned char player);
-
 void resetPosition();
 
 #endif

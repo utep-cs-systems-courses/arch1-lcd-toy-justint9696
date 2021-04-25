@@ -16,27 +16,27 @@ void collision_handler() {
   switch (collision) {
   case 1: // Collision with top of screen
     if (ball.vel_x > 0)
-      setBallVelocity(3, 3);
+      setBallVelocity(1, 1);
     else
-      setBallVelocity(-3, 3);
+      setBallVelocity(-1, 1);
     break;
   case 2: // Collision with bottom of screen
     if (ball.vel_x > 0)
-      setBallVelocity(3, -3);
+      setBallVelocity(5, -5);
     else
-      setBallVelocity(-3, -3);
+      setBallVelocity(-5, -5);
     break;
   case 3: // Collision with player 1
     if (p1.vel > 0)
-      setBallVelocity(3, 3);
+      setBallVelocity(5, 5);
     else
-      setBallVelocity(3, -3);
+      setBallVelocity(5, -5);
     break;
   case 4: // Collision with player 2
     if (p2.vel > 0)
-      setBallVelocity(-3, 3);
+      setBallVelocity(-5, 5);
     else
-      setBallVelocity(-3, -3);
+      setBallVelocity(-5, -5);
     break;
   default:
     setBallVelocity(ball.vel_x, ball.vel_y);
@@ -62,8 +62,8 @@ void wdt_c_handler()
       if (button_pressed(4) && canMove(2, 5))
 	setVelocity(2, 5);
     } else {
-      resetPosition();
       clearScreen(COLOR_BLUE);
+      resetPosition();
     }
   }
 }
@@ -75,7 +75,6 @@ void main()
   P1OUT |= LED_GREEN;
   configureClocks();
   lcd_init();
-  // buttons_init();
   
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
@@ -83,24 +82,22 @@ void main()
   setScore(1, 0);
   setScore(2, 0);
   resetPosition();
-  setBallVelocity(-3, -3);
+  setBallVelocity(-5, -5);
   clearScreen(COLOR_BLUE);
-  
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
 
-      change_color();
+      shapeColor = COLOR_BLUE;
       fillRectangle(ball.prev_x, ball.prev_y, 5, 5, shapeColor); // Ball
       fillRectangle(p1.prev_x, p1.prev_y, 5, 50, shapeColor);    // Player 1
       fillRectangle(p2.prev_x, p2.prev_y, 5, 50, shapeColor);    // Player 2
 
-      change_color();
+      shapeColor = COLOR_ORANGE;
       fillRectangle(ball.pos_x, ball.pos_y, 5, 5, shapeColor); // Ball
       fillRectangle(p1.pos_x, p1.pos_y, 5, 50, shapeColor);    // Player 1
       fillRectangle(p2.pos_x, p2.pos_y, 5, 50, shapeColor);    // Player 2
     }
-    
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
     P1OUT |= LED_GREEN;		/* green on */

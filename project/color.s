@@ -1,25 +1,40 @@
 	.arch msp430g2553
 	.p2align 1,0
 
+	.data
+c:
+	.word 0
+
 	.text
-	
+jt:
+	.word case0
+	.word case1
+
+	.word default
 	.global change_color
-	.global color_handler
-	
-	.global shapeFgColor
+	.extern shapeColor
 
 change_color:
-	sub #0x053F, r12
-	jnz notOrange
-	mov #0xF800, r12
-	pop r0
+	cmp #2, &c
+	jhs default			; if c >= 2
+	cmp #1, &c
+	jnc case0			; if c < 1
+	jmp case1			; c == 1
 
-notOrange:
-	mov #0x053F, r12
-	pop r0
-
-color_handler:
-	mov &shapeFgColor, r12
-	call #change_color
-	mov r12, &shapeFgColor
+case0:
+	mov #1, &c		 	; c = 1
+	mov #0xf800, &shapeColor 	; shapeColor = COLOR_BLUE
+	jmp end				; break
 	
+case1:
+	mov #0, &c		 	; c = 0
+	mov #0x053f, &shapeColor 	; shapeColor = COLOR_ORANGE
+	jmp end				; break
+	
+default:
+	mov #0, &c			; c = 0	
+	mov #0x053f, &shapeColor 	; shapeColor = COLOR_ORANGE
+	jmp end				; break
+
+end:
+	pop r0

@@ -6,7 +6,7 @@
 char sw1 = 0, sw2 = 0;
 char button_state_changed = 0;
 
-void buttons_init() {
+void init_buttons() {
   P2REN |= BUTTONS;
   P2IE |= BUTTONS;
   P2OUT |= BUTTONS;

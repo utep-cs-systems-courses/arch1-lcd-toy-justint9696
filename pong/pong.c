@@ -70,19 +70,6 @@ void setScore(unsigned char player, unsigned char score) {
   }
 }
 
-void addScore(unsigned char player) {
-  switch (player) {
-  case 1:
-    p1.score += 1;
-    break;
-  case 2:
-    p2.score += 1;
-    break;
-  default:
-    break;
-  }
-}
-
 void resetPosition() {
   p1.pos_x = 5;
   p1.pos_y = (screenHeight / 2) - 25;

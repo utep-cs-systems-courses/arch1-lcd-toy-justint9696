@@ -9,7 +9,7 @@
 
 extern char sw1, sw2, button_state_changed;
 
-void buttons_init();
+void init_buttons();
 
 static char button_handler();
 
