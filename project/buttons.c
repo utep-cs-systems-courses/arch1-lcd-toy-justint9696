@@ -3,8 +3,7 @@
 #include "buttons.h"
 #include "pong.h"
 
-char sw1 = 0, sw2 = 0;
-char button_state_changed = 0;
+char sw1 = 0, sw2 = 0, sw3 = 0, sw4 = 0;
 
 void buttons_init() {
   P2REN |= BUTTONS;
@@ -42,4 +41,15 @@ char button_pressed(unsigned char button) {
 
 void button_interrupt_handler() {
   char p2val = button_handler();
+  sw1 = (p2val & BTN1) ? 0 : 1;
+  sw2 = (p2val & BTN2) ? 0 : 1;
+  sw3 = (p2val & BTN3) ? 0 : 1;
+  sw4 = (p2val & BTN4) ? 0 : 1;
+}
+
+void __interrupt_vec(PORT2_VECTOR) Port2() {
+  if (P2IFG & BUTTONS) {
+    P2IFG &= ~BUTTONS;
+    button_interrupt_handler();
+  }
 }

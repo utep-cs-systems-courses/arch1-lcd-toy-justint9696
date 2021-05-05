@@ -7,7 +7,7 @@
 #define BTN4 BIT3
 #define BUTTONS (BTN1 | BTN2 | BTN3 | BTN4)
 
-extern char sw1, sw2, button_state_changed;
+extern char sw1, sw2, sw3, sw4;
 
 void buttons_init();
 

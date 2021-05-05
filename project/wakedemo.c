@@ -3,6 +3,7 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 #include "buttons.h"
+#include "buzzer.h"
 #include "color.h"
 #include "pong.h"
 
@@ -11,8 +12,24 @@
 short redrawScreen = 1;
 u_int shapeColor = COLOR_ORANGE;
 
+void draw_shape(char size) {
+  char x_offset = (screenWidth / 2);
+  char y_offset = (screenHeight / 2) - 25;
+
+  char n = size;
+  
+  while (--n > 0) {
+    for (char i = 0; i < size; i++) {
+      drawPixel(x_offset + i, y_offset, COLOR_ORANGE);
+    }
+    x_offset++;
+    y_offset--;
+  }
+}
+
 void collision_handler() {
   char collision = detectCollision();
+  if (collision) set_buzzer(500);
   switch (collision) {
   case 1: // Collision with top of screen
     if (ball.vel_x > 0)
@@ -51,15 +68,16 @@ void wdt_c_handler()
   if (++dsecCount == 25) {
     dsecCount = 0;
     redrawScreen = 1;
+    set_buzzer(0);
     collision_handler();
     if (withinBounds()) {
-      if (button_pressed(1) && canMove(1, -5))
+      if (sw1 && canMove(1, -5))
 	setVelocity(1, -5);
-      if (button_pressed(2) && canMove (1, 5))
+      if (sw2 && canMove (1, 5))
 	setVelocity(1, 5);
-      if (button_pressed(3) && canMove(2, -5))
+      if (sw3 && canMove(2, -5))
 	setVelocity(2, -5);
-      if (button_pressed(4) && canMove(2, 5))
+      if (sw4 && canMove(2, 5))
 	setVelocity(2, 5);
     } else {
       resetPosition();
@@ -75,7 +93,8 @@ void main()
   P1OUT |= LED_GREEN;
   configureClocks();
   lcd_init();
-  // buttons_init();
+  buzzer_init();
+  buttons_init();
   
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
@@ -85,6 +104,8 @@ void main()
   resetPosition();
   setBallVelocity(-3, -3);
   clearScreen(COLOR_BLUE);
+
+  draw_shape(15);
   
   while (1) {			/* forever */
     if (redrawScreen) {
