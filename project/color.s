@@ -22,12 +22,12 @@ change_color:
 	jmp case1			; c == 1
 
 case0:
-	add #1, &c		 	; c = 1
+	mov #1, &c		 	; c = 1
 	mov #0xf800, &shapeColor 	; shapeColor = COLOR_BLUE
 	jmp end				; break
 	
 case1:
-	sub #1, &c		 	; c = 0
+	mov #0, &c		 	; c = 0
 	mov #0x053f, &shapeColor 	; shapeColor = COLOR_ORANGE
 	jmp end				; break
 	
