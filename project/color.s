@@ -3,7 +3,7 @@
 
 	.data
 c:
-	.byte 0
+	.word 0
 
 	.text
 jt:
@@ -17,10 +17,10 @@ jt:
 change_color:
 	cmp #2, &c
 	jhs default			; if c >= 2
-	cmp #1, &c
-	jnc case0			; if c < 1
-	jmp case1			; c == 1
-
+	mov &c, r12			; move c into r12
+	add #1, r12			; add 1 to r12
+	mov jt(r12), r0			; jmp to jt(r12)
+	
 case0:
 	mov #1, &c		 	; c = 1
 	mov #0xf800, &shapeColor 	; shapeColor = COLOR_BLUE
