@@ -1,16 +1,20 @@
 #include <msp430.h>
 #include <libTimer.h>
+#include <stdio.h>
 #include "lcdutils.h"
 #include "lcddraw.h"
 #include "buttons.h"
 #include "buzzer.h"
-#include "color.h"
+#include "color.h" 
 #include "pong.h"
+#include "shape.h"
 
 #define LED_GREEN BIT6             // P1.6
 
 short redrawScreen = 1;
+short redrawShape = 1;
 u_int shapeColor = COLOR_ORANGE;
+char score[32];
 
 void draw_shape(char size) {
   char x_offset = (screenWidth / 2);
@@ -29,7 +33,7 @@ void draw_shape(char size) {
 
 void collision_handler() {
   char collision = detectCollision();
-  if (collision) set_buzzer(500);
+  // if (collision) set_buzzer(500);
   switch (collision) {
   case 1: // Collision with top of screen
     if (ball.vel_x > 0)
@@ -69,15 +73,16 @@ void wdt_c_handler()
     dsecCount = 0;
     redrawScreen = 1;
     set_buzzer(0);
+    shape_handler();
     collision_handler();
     if (withinBounds()) {
       if (sw1 && canMove(1, -5))
 	setVelocity(1, -5);
-      if (sw2 && canMove (1, 5))
+      else if (sw2 && canMove (1, 5))
 	setVelocity(1, 5);
       if (sw3 && canMove(2, -5))
 	setVelocity(2, -5);
-      if (sw4 && canMove(2, 5))
+      else if (sw4 && canMove(2, 5))
 	setVelocity(2, 5);
     } else {
       resetPosition();
@@ -99,13 +104,9 @@ void main()
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
 
-  setScore(1, 0);
-  setScore(2, 0);
   resetPosition();
   setBallVelocity(-3, -3);
   clearScreen(COLOR_BLUE);
-
-  draw_shape(15);
   
   while (1) {			/* forever */
     if (redrawScreen) {
@@ -120,6 +121,12 @@ void main()
       fillRectangle(ball.pos_x, ball.pos_y, 5, 5, shapeColor); // Ball
       fillRectangle(p1.pos_x, p1.pos_y, 5, 50, shapeColor);    // Player 1
       fillRectangle(p2.pos_x, p2.pos_y, 5, 50, shapeColor);    // Player 2
+    }
+
+    if (redrawShape) {
+      redrawShape = 0;
+      
+      draw_shape(15);
     }
     
     P1OUT &= ~LED_GREEN;	/* green off */

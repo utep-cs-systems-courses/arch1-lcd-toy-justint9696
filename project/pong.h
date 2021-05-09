@@ -26,6 +26,8 @@ char canMove(unsigned char player, signed char vel);
 
 char withinBounds();
 
+char outOfBounds();
+
 char detectCollision();
 
 void setVelocity(unsigned char player, char vel);

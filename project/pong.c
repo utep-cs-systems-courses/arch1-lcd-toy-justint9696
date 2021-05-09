@@ -18,6 +18,14 @@ char withinBounds() {
   return (ball.pos_x > 0 && ball.pos_x < screenWidth);
 }
 
+char outOfBounds() {
+  if (ball.pos_x < p1.pos_x)
+    return 1;
+  else if (ball.pos_x > p2.pos_x)
+    return 2;
+  return 0;
+}
+
 char detectCollision() {
   if (ball.pos_y <= 0)
     return 1; // Collision with top of screen
@@ -73,10 +81,10 @@ void setScore(unsigned char player, unsigned char score) {
 void addScore(unsigned char player) {
   switch (player) {
   case 1:
-    p1.score += 1;
+    p1.score++;
     break;
   case 2:
-    p2.score += 1;
+    p2.score++;
     break;
   default:
     break;
